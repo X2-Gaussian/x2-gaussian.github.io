@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="X$^{2}$-Gaussian: 4D Radiative Gaussian Splatting for Continuous-time Tomographic Reconstruction">
+  <meta name="keywords" content="4DGS, 4D Gaussian Splatting, CT, Computed Tomograph, Reconstruction">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/x-icon" href="/feature-3dgs.github.io/media/pipeline.png">
+  
+  <title>X$^{2}$-Gaussian: 4D Radiative Gaussian Splatting for Continuous-time Tomographic Reconstruction</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <!-- custom additional scripts -->
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- https://docs.mathjax.org/en/latest/web/configuration.html#configuration-using-an-in-line-script -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+  </script>
+
+  <script
+  defer
+  src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"
+  ></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"
+  />
+
+  <!-- swiper -->
+  <!-- https://swiperjs.com/demos -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+  <link rel="image_src" href="./media/pipeline.png">
+  
+  <!-- img comparison slider -->
+  <!-- https://github.com/sneas/img-comparison-slider -->
+  <style>
+    .before,
+    .after {
+      margin: 0;
+    }
+  
+    .before figcaption,
+    .after figcaption {
+      background: #fff;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      color: #2e3452;
+      opacity: 0.8;
+      padding: 4px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      line-height: 70%;
+    }
+  
+    .before figcaption {
+      left: 4px;
+    }
+  
+    .after figcaption {
+      right: 4px;
+    }
+  </style>
+
+<style>
+  .button-container_teaser {
+      display: flex;       
+      justify-content: center; 
+      align-items: center;
+  }
+
+  .glow-button {
+      position: relative;
+      display: inline-block;
+      padding: 2px;
+      border-radius: 10px;
+      z-index: 0;
+      margin-bottom: 15px;
+  }
+
+  .glow-button button {
+      background: transparent; 
+      border: none; 
+      color: white; 
+      padding: 5px 10px; 
+      font-size: 16px; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      outline: none; 
+  }
+
+  .glow-button:before {
+      content: "";
+      background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      background-size: 400%;
+      z-index: -1;
+      filter: blur(5px);
+      -webkit-filter: blur(5px);
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      animation: glowing-button-85 20s linear infinite;
+      transition: opacity 0.3s ease-in-out;
+      border-radius: 10px;
+  }
+
+  @keyframes glowing-button-85 {
+      0% { background-position: 0 0; }
+      50% { background-position: 400% 0; }
+      100% { background-position: 0 0; }
+  }
+
+  .glow-button:after {
+      z-index: -1;
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #222;
+      left: 0;
+      top: 0;
+      border-radius: 10px;
+  }
+</style>
+
+<style>
+  .container_teaser {
+      display: flex; /* Enables Flexbox */
+      justify-content: center; /* Horizontally centers the content */
+      align-items: center; /* Vertically centers the content */
+      height: 100%; /* Set the height of the container */
+  }
+
+  .column_teaser {
+      flex: 0 0 auto; /* This ensures that the column doesn't grow or shrink */
+      width: 100%; /* Adjust this width as needed */
+      max-width: 800px; /* Adjust this max-width as needed */
+      margin: 0 auto; /* Centers the column within the container */
+  }
+</style>
+  <script
+  defer
+  src="./static/js/image-comparison-slider.js"
+  ></script>
+  <link
+    rel="stylesheet"
+    href="./static/css/image-comparison-slider.css"
+  />
+
+</head>
+<body>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <!-- <h1 class="title is-1 publication-title">Feature 3DGS: Supercharging 3D Gaussian Splatting to Enable Distilled Feature Fields</h1> -->
+          <h1 class="title is-1 publication-title">Feature 3DGS 🪄</h1>
+          <h1 class="title is-2 publication-title">Supercharging 3D Gaussian Splatting to Enable Distilled Feature Fields</h1>
+            <style>
+              .author-block {
+                  margin-right: 10px;
+              }
+            </style>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=fCzlLE4AAAAJ&hl=zh-CN">Weihao Yu</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://caiyuanhao1998.github.io/">Yuanhao Cai</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://ruyi-zha.github.io/">Ruyi Zha</a><sup>3</sup>,</span>
+              <span class="author-block">
+                <a href="https://zhiwenfan.github.io/">Zhiwen Fan</a><sup>4</sup>,</span>
+              <span class="author-block"> 
+                <a href="https://chenxinli001.github.io/">Chenxin Li</a><sup>1</sup>,</span>
+              <span class="author-block"> 
+                <a href="https://www.ee.cuhk.edu.hk/~yxyuan/">Yixuan Yuan</a><sup>1</sup>,</span>
+              </span>
+            </div>
+
+          <style>
+            .univerity-block {
+                margin-right: 14px;
+            }
+          </style>
+          <div class="is-size-5 publication-authors">
+            <span class="univerity-block"><sup>1</sup>The Chinese University of Hong Kong</span>
+            <span class="univerity-block"><sup>2</sup>Johns Hopkins University</span>
+            <span class="univerity-block"><sup>3</sup>The Australian National University</span>
+            <span class="univerity-block"><sup>4</sup>University of Texas at Austin</span>
+          </div>
+
+        
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2312.03203"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/ShijieZhou-UCLA/feature-3dgs"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container_teaser is-max-desktop">
+    <div class="column_teaser">
+        <!-- First Slider -->
+        <div id="slider1-container_teaser">
+            <img-comparison-slider id="slider1">
+                <figure slot="first" class="before">
+                    <img height="100%" width="100%" src="./media/teaser/rgb1.gif">
+                    <figcaption>Radiance Field </figcaption>
+                </figure>
+                <figure slot="second" class="after" id="gif-2">
+                    <img height="100%" width="100%" src="./media/teaser/lseg.gif">
+                    <figcaption>Distilled Feature Field (LSeg)</figcaption>
+                </figure>
+            </img-comparison-slider>
+        </div>
+
+        <!-- Second Slider, initially hidden -->
+        <div id="slider2-container_teaser" style="display: none;">
+            <img-comparison-slider id="slider2">
+                <figure slot="first" class="before" id="gif-3">
+                    <img height="100%" width="100%" src="./media/teaser/rgb2.gif">
+                    <figcaption>Radiance Field </figcaption>
+                </figure>
+                <figure slot="second" class="after" id="gif-4">
+                    <img height="100%" width="100%" src="./media/teaser/sam.gif">
+                    <figcaption>Distilled Feature Field (SAM)</figcaption>
+                </figure>
+            </img-comparison-slider>
+        </div>
+        <div class="button-container_teaser">
+          <div class="glow-button">
+              <button id="toggle-slider" onclick="toggleSliders()">Switch Feature Field 🪄</button>
+          </div>
+      </div>
+        <h2 class="subtitle has-text-centered">
+          Feature 3DGS distills 3D feature fields from any 2D foundation models, opening the door to a brand new semantic, editable, and promptable explicit 3D scene representation.
+        </h2>        
+    </div>
+</div>
+
+    <!-- <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
+        free-viewpoint
+        portraits.
+      </h2>
+    </div>
+  </div> -->
+</section>
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Four-dimensional computed tomography (4D CT) reconstruction is crucial for capturing dynamic anatomical changes but faces inherent limitations from conventional phase-binning workflows. 
+            Current methods discretize temporal resolution into fixed phases with respiratory gating devices, introducing motion misalignment and restricting clinical practicality. 
+            In this paper, We propose X$^2$-Gaussian, a novel framework that enables continuous-time 4D-CT reconstruction by integrating dynamic radiative Gaussian splatting with self-supervised respiratory motion learning. 
+            Our approach models anatomical dynamics through a spatiotemporal encoder-decoder architecture that predicts time-varying Gaussian deformations, eliminating phase discretization. 
+            To remove dependency on external gating devices, we introduce a physiology-driven periodic consistency loss that learns patient-specific breathing cycles directly from projections via differentiable optimization. 
+            Extensive experiments demonstrate state-of-the-art performance, achieving a 9.93 dB PSNR gain over traditional methods and 2.25 dB improvement against prior Gaussian splatting techniques. 
+            By unifying continuous motion modeling with hardware-free period learning, X$^2$-Gaussian advances high-fidelity 4D CT reconstruction for dynamic clinical imaging.
+          </p>
+          
+          <!--/ Paper video. -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Approach</h2>
+    <div class="content has-text-justified">
+      <div class="columns is-centered">
+        <figure class="image is-centered">
+          <img src="./media/pipeline/Pipline.jpg" alt="Pipeline Image">
+        </figure>
+      </div>
+      <p>
+        We design dynamic Gaussian motion modeling for continuous-time reconstruction,
+        and self-Supervised respiratory motion learning for estimating breathing cycle autonomously. <br> <br>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{zhou2024feature,
+    title={Feature 3dgs: Supercharging 3d gaussian splatting to enable distilled feature fields},
+    author={Zhou, Shijie and Chang, Haoran and Jiang, Sicheng and Fan, Zhiwen and Zhu, Zehao and Xu, Dejia and Chari, Pradyumna and You, Suya and Wang, Zhangyang and Kadambi, Achuta},
+    booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+    pages={21676--21685},
+    year={2024}
+}</code></pre>
+  </div>
+</section>
+
+
+</body>
+</html>
